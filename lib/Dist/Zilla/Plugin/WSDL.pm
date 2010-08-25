@@ -49,7 +49,7 @@ has typemap => (
 
 =method gather_files
 
-Instructs L<wsdl2perl.pl> to generate Perl classes for the provided WSDL
+Instructs C<wsdl2perl.pl> to generate Perl classes for the provided WSDL
 and gathers them into the C<lib> directory of your distribution.
 
 =cut
@@ -76,3 +76,12 @@ sub gather_files {
 }
 
 1;
+
+__END__
+
+=head1 DESCRIPTION
+
+This L<Dist::Zilla> plugin will create classes in your distribution for
+interacting with a web service based on that service's published WSDL file.
+It uses L<SOAP::WSDL>'s C<wsdl2perl.pl> script, which must be in your
+executable path, and can optionally add both a class prefix and a typemap.

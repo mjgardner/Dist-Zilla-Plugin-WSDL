@@ -6,24 +6,10 @@ use Modern::Perl;
 use English '-no_match_vars';
 use IPC::System::Simple 'systemx';
 use Moose;
-use Moose::Util::TypeConstraints;
-use MooseX::Types::Path::Class 'to_File';
 use MooseX::Types::URI 'Uri';
-use Regexp::DefaultFlags;
+use Dist::Zilla::Plugin::WSDL::Types qw(AbsoluteFile ClassPrefix);
 with 'Dist::Zilla::Role::Tempdir';
 with 'Dist::Zilla::Role::FileGatherer';
-
-subtype AbsoluteFile => as 'Path::Class::File' =>
-    where { $ARG->is_absolute() };
-coerce AbsoluteFile => from 'Str' => via { to_File($ARG)->absolute() };
-
-subtype ClassPrefix => as 'Str' => where {
-    $ARG =~ /\A
-        (?: \w+ )                   # top of name hierarchy
-        (?: (?: :: ) (?: \w+ ) )*   # possibly more levels down
-        (?: :: )?                   # possibly followed by ::
-    /;
-};
 
 =attr uri
 
@@ -46,7 +32,7 @@ String used to prefix generated classes.
 
 has prefix => (
     is  => 'ro',
-    isa => 'ClassPrefix',
+    isa => ClassPrefix,
 );
 
 =attr typemap
@@ -57,7 +43,7 @@ Name of a typemap file to load in addition to the generated classes.
 
 has typemap => (
     is     => 'ro',
-    isa    => 'AbsoluteFile',
+    isa    => AbsoluteFile,
     coerce => 1,
 );
 

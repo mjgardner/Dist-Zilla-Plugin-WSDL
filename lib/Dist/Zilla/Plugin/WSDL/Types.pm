@@ -15,11 +15,11 @@ coerce AbsoluteFile, from File, via { to_File($ARG)->absolute() };
 coerce AbsoluteFile, from Str,  via { to_File($ARG)->absolute() };
 
 subtype ClassPrefix, as Str, where {
-    $ARG =~ /\A
+    $ARG =~ m{\A
         (?: \w+ )                   # top of name hierarchy
         (?: (?: :: ) (?: \w+ ) )*   # possibly more levels down
         (?: :: )?                   # possibly followed by ::
-    /;
+    };
 };
 
 1;

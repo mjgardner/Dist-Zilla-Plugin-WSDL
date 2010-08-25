@@ -72,6 +72,7 @@ sub gather_files {
         $ARG->file->name( 'lib/' . $ARG->file->name() );
         $self->add_file( $ARG->file() );
     }
+    return;
 }
 
 1;

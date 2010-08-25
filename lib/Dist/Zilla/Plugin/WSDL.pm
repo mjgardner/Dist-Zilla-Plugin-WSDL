@@ -31,8 +31,9 @@ String used to prefix generated classes.
 =cut
 
 has prefix => (
-    is  => 'ro',
-    isa => ClassPrefix,
+    is        => 'ro',
+    isa       => ClassPrefix,
+    predicate => 'has_prefix',
 );
 
 =attr typemap
@@ -42,10 +43,33 @@ Name of a typemap file to load in addition to the generated classes.
 =cut
 
 has typemap => (
-    is     => 'ro',
-    isa    => AbsoluteFile,
-    coerce => 1,
+    is        => 'ro',
+    isa       => AbsoluteFile,
+    coerce    => 1,
+    predicate => 'has_typemap',
 );
+
+has _command => (
+    traits     => ['Array'],
+    is         => 'ro',
+    isa        => 'ArrayRef[Str]',
+    lazy_build => 1,
+    handles    => { command => 'elements' },
+);
+
+sub _build__command {    ## no critic (ProhibitUnusedPrivateSubroutines)
+    my $self = shift;
+
+    my @command = ( 'wsdl2perl.pl', '--base_path', q{.} );
+    if ( $self->has_typemap() ) {
+        push @command, '--typemap_include', $self->typemap();
+    }
+    if ( $self->has_prefix() ) {
+        push @command, '--prefix', $self->prefix();
+    }
+
+    return [ @command, $self->uri() ];
+}
 
 =method gather_files
 
@@ -57,16 +81,8 @@ and gathers them into the C<lib> directory of your distribution.
 sub gather_files {
     my $self = shift;
 
-    my @command = (
-        'wsdl2perl.pl',
-        '--typemap_include' => $self->typemap(),
-        '--prefix'          => $self->prefix(),
-        '--base_path'       => q{.},
-        $self->uri(),
-    );
-
     my (@generated_files)
-        = $self->capture_tempdir( sub { systemx(@command) } );
+        = $self->capture_tempdir( sub { systemx( $self->command() ) } );
 
     for ( grep { $ARG->is_new() } @generated_files ) {
         $ARG->file->name( 'lib/' . $ARG->file->name() );

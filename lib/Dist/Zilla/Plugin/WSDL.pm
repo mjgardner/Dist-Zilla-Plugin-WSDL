@@ -61,7 +61,7 @@ sub gather_files {
         'wsdl2perl.pl',
         '--typemap_include' => $self->typemap(),
         '--prefix'          => $self->prefix(),
-        '--base_path'       => '.',
+        '--base_path'       => q{.},
         $self->uri(),
     );
 
@@ -81,7 +81,8 @@ __END__
 
 =head1 DESCRIPTION
 
-This L<Dist::Zilla> plugin will create classes in your distribution for
-interacting with a web service based on that service's published WSDL file.
-It uses L<SOAP::WSDL>'s C<wsdl2perl.pl> script, which must be in your
-executable path, and can optionally add both a class prefix and a typemap.
+This L<Dist::Zilla|Dist::Zilla> plugin will create classes in your
+distribution for interacting with a web service based on that service's
+published WSDL file.  It uses L<SOAP::WSDL|SOAP::WSDL>'s C<wsdl2perl.pl>
+script, which must be in your executable path, and can optionally add both a
+class prefix and a typemap.

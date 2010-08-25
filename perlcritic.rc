@@ -1,0 +1,12 @@
+severity = brutal
+verbose = 8
+exclude = RequireEmacsFileVariables RequirePodAtEnd RequireRcsKeywords RegularExpressions::RequireDotMatchAnything RegularExpressions::RequireExtendedFormatting RegularExpressions::RequireLineBoundaryMatching
+
+[Documentation::PodSpelling]
+stop_words = WSDL plugin typemap uri
+
+[Documentation::RequirePodSections]
+lib_sections = NAME | VERSION | DESCRIPTION | COPYRIGHT AND LICENSE
+
+[Subroutines::ProhibitCallsToUndeclaredSubs]
+exempt_subs = Moose::has Moose::with MooseX::Types::as MooseX::Types::coerce MooseX::Types::from MooseX::Types::subtype MooseX::Types::via MooseX::Types::where

@@ -9,13 +9,15 @@ use Moose;
 use MooseX::Types::Moose 'Str';
 use MooseX::Types::Path::Class qw(File to_File);
 use MooseX::Types -declare => [qw(AbsoluteFile ClassPrefix)];
+## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 
 =head1 TYPES
 
-=head2 AbsoluteFile
+=head2 C<AbsoluteFile>
 
-A subtype of L<Path::Class::File> that only accepts files with absolute paths.
-Has coercions for relative-pathed files as well as strings.
+A subtype of L<Path::Class::File|Path::Class::File> that only accepts files
+with absolute paths.  Has coercions for files with relative paths as well as
+strings.
 
 =cut
 
@@ -23,7 +25,7 @@ subtype AbsoluteFile, as File, where { $ARG->is_absolute() };
 coerce AbsoluteFile, from File, via { to_File($ARG)->absolute() };
 coerce AbsoluteFile, from Str,  via { to_File($ARG)->absolute() };
 
-=head2 ClassPrefix
+=head2 C<ClassPrefix>
 
 A string subtype for Perl class names C<Like::This> or class prefix names
 C<Like::This::>.
@@ -44,4 +46,5 @@ __END__
 
 =head1 DESCRIPTION
 
-This is a L<Moose> subtype library for L<Dist::Zilla::Plugin::WSDL>.
+This is a L<Moose|Moose> subtype library for
+L<Dist::Zilla::Plugin::WSDL|Dist::Zilla::Plugin::WSDL>.

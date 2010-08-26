@@ -4,16 +4,19 @@ package Dist::Zilla::Plugin::WSDL;
 
 use Modern::Perl;
 use English '-no_match_vars';
-use IPC::System::Simple 'systemx';
+use LWP::UserAgent;
 use Moose;
 use MooseX::Types::URI 'Uri';
-use Dist::Zilla::Plugin::WSDL::Types qw(AbsoluteFile ClassPrefix);
+use SOAP::WSDL::Expat::WSDLParser;
+use SOAP::WSDL::Factory::Generator;
+use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
 with 'Dist::Zilla::Role::Tempdir';
 with 'Dist::Zilla::Role::FileGatherer';
 
 =attr uri
 
-URI string pointing to the WSDL that will be used to generate Perl classes.
+URI (sometimes spelled URL) pointing to the WSDL that will be used to generate
+Perl classes.
 
 =cut
 
@@ -24,9 +27,32 @@ has uri => (
     coerce   => 1,
 );
 
+has _definitions => (
+    is         => 'ro',
+    isa        => 'SOAP::WSDL::Base',
+    lazy_build => 1,
+    init_arg   => undef,
+);
+
+sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
+    my $self = shift;
+
+    my $lwp = LWP::UserAgent->new();
+    $lwp->env_proxy();
+    my $parser = SOAP::WSDL::Expat::WSDLParser->new( { user_agent => $lwp } );
+    return $parser->parse_uri( $self->uri() );
+}
+
+has _OUTPUT_PATH => (
+    is       => 'ro',
+    isa      => 'Str',
+    default  => q{.},
+    init_arg => undef,
+);
+
 =attr prefix
 
-String used to prefix generated classes.
+String used to prefix generated classes.  Default is "My".
 
 =cut
 
@@ -34,42 +60,64 @@ has prefix => (
     is        => 'ro',
     isa       => ClassPrefix,
     predicate => 'has_prefix',
+    default   => 'My',
 );
 
 =attr typemap
 
-Name of a typemap file to load in addition to the generated classes.
+Hash reference to a L<SOAP::WSDL|SOAP::WSDL> typemap.
 
 =cut
 
 has typemap => (
     is        => 'ro',
-    isa       => AbsoluteFile,
-    coerce    => 1,
+    isa       => 'HashRef',
     predicate => 'has_typemap',
 );
 
-has _command => (
-    traits     => ['Array'],
+has _generator => (
     is         => 'ro',
-    isa        => 'ArrayRef[Str]',
+    isa        => 'SOAP::WSDL::Generator::Template::XSD',
     lazy_build => 1,
-    handles    => { command => 'elements' },
 );
 
-sub _build__command {    ## no critic (ProhibitUnusedPrivateSubroutines)
+sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
 
-    my @command = ( 'wsdl2perl.pl', '--base_path', q{.} );
-    if ( $self->has_typemap() ) {
-        push @command, '--typemap_include', $self->typemap();
-    }
-    if ( $self->has_prefix() ) {
-        push @command, '--prefix', $self->prefix();
+    my $generator
+        = SOAP::WSDL::Factory::Generator->get_generator( { type => 'XSD' } );
+    if ( $self->has_typemap() and $generator->can('set_typemap') ) {
+        $generator->set_typemap( $self->typemap() );
     }
 
-    return [ @command, $self->uri() ];
+    for my $prefix (qw(attribute type typemap element interface server)) {
+        my $method = "set_${prefix}_prefix";
+        if ( $generator->can($method) ) {
+            $generator->$method( $self->prefix()
+                    . ucfirst($prefix)
+                    . ( $prefix eq 'server' ? 's' : q{} ) );
+        }
+    }
+
+    my %attr_method
+        = map { ( "_$ARG" => "set_$ARG" ) } qw(OUTPUT_PATH definitions);
+    while ( my ( $attr, $method ) = each %attr_method ) {
+        next if not $generator->can($method);
+        $generator->$method( $self->$attr );
+    }
+
+    return $generator;
 }
+
+=attr server
+
+=cut
+
+has generate_server => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
 
 =method gather_files
 
@@ -81,8 +129,14 @@ and gathers them into the C<lib> directory of your distribution.
 sub gather_files {
     my $self = shift;
 
-    my (@generated_files)
-        = $self->capture_tempdir( sub { systemx( $self->command() ) } );
+    my (@generated_files) = $self->capture_tempdir(
+        sub {
+            $self->_generator->generate();
+            my $method = 'generate_'
+                . ( $self->generate_server ? 'server' : 'interface' );
+            $self->_generator->$method;
+        }
+    );
 
     for ( grep { $ARG->is_new() } @generated_files ) {
         $ARG->file->name( 'lib/' . $ARG->file->name() );
@@ -99,6 +153,5 @@ __END__
 
 This L<Dist::Zilla|Dist::Zilla> plugin will create classes in your
 distribution for interacting with a web service based on that service's
-published WSDL file.  It uses L<SOAP::WSDL|SOAP::WSDL>'s C<wsdl2perl.pl>
-script, which must be in your executable path, and can optionally add both a
-class prefix and a typemap.
+published WSDL file.  It uses L<SOAP::WSDL|SOAP::WSDL> and can optionally add
+both a class prefix and a typemap.

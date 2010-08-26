@@ -90,13 +90,13 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         $generator->set_typemap( $self->typemap() );
     }
 
-    for my $prefix (qw(attribute type typemap element interface server)) {
-        my $method = "set_${prefix}_prefix";
-        if ( $generator->can($method) ) {
-            $generator->$method( $self->prefix()
-                    . ucfirst($prefix)
-                    . ( $prefix eq 'server' ? 's' : q{} ) );
-        }
+    my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
+        qw(attribute type typemap element interface server);
+    while ( my ( $prefix, $method ) = each %prefix_method ) {
+        next if not $generator->can($method);
+        $generator->$method( $self->prefix()
+                . ucfirst($prefix)
+                . ( $prefix eq 'server' ? 's' : q{} ) );
     }
 
     my %attr_method

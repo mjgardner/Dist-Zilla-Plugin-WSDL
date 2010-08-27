@@ -1,4 +1,7 @@
 {{$NEXT}}
-
+    Use SOAP::WSDL directly instead of wsdl2perl.pl script.
+    Better support for mapping undefined SOAP types to classes.
+    Added test against demo WSDL hosted at whitemesa.com.
+    Better documentation.
 0.102370  2010-08-25 15:09:55 America/New_York
     First release.

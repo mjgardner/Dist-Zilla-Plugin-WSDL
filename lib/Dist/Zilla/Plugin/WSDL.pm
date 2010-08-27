@@ -65,15 +65,44 @@ has prefix => (
 
 =attr typemap
 
-Hash reference to a L<SOAP::WSDL|SOAP::WSDL> typemap.
+A list of SOAP types and the classes that should be mapped to them. Provided
+because some WSDL files don't always define every type, especially fault
+responses.  Listed as a series of C<< => >> delimited pairs.
+
+Example:
+
+    typemap = Fault/detail/FooException => MyTypes::FooException
+    typemap = Fault/detail/BarException => MyTypes::BarException
+
+=for Pod::Coverage mvp_multivalue_args
 
 =cut
 
-has typemap => (
-    is        => 'ro',
-    isa       => 'HashRef',
-    predicate => 'has_typemap',
+sub mvp_multivalue_args { return 'typemap' }
+
+has _typemap_lines => (
+    traits   => ['Array'],
+    is       => 'ro',
+    isa      => 'ArrayRef[Str]',
+    init_arg => 'typemap',
+    handles  => { _typemap_array => 'elements' },
+    lazy     => 1,
+    default  => sub { [] },
 );
+
+has _typemap => (
+    is         => 'ro',
+    isa        => 'HashRef[Str]',
+    predicate  => 'has_typemap',
+    init_arg   => undef,
+    lazy_build => 1,
+);
+
+sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
+    my $self = shift;
+
+    return { map { +split /\s*=>\s*/, $ARG } $self->_typemap_array() };
+}
 
 has _generator => (
     is         => 'ro',
@@ -87,7 +116,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $generator
         = SOAP::WSDL::Factory::Generator->get_generator( { type => 'XSD' } );
     if ( $self->has_typemap() and $generator->can('set_typemap') ) {
-        $generator->set_typemap( $self->typemap() );
+        $generator->set_typemap( $self->_typemap() );
     }
 
     my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
@@ -124,8 +153,8 @@ has generate_server => (
 
 =method gather_files
 
-Instructs L<SOAP::WSDL> to generate Perl classes for the provided WSDL
-and gathers them into the C<lib> directory of your distribution.
+Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
+WSDL and gathers them into the C<lib> directory of your distribution.
 
 =cut
 

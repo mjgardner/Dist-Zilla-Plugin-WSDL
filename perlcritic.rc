@@ -3,7 +3,7 @@ verbose = 8
 exclude = RequireEmacsFileVariables RequirePodAtEnd RequireRcsKeywords RegularExpressions::RequireDotMatchAnything RegularExpressions::RequireExtendedFormatting RegularExpressions::RequireLineBoundaryMatching
 
 [Documentation::PodSpelling]
-stop_words = WSDL plugin typemap uri
+stop_words = WSDL plugin typemap uri CGI
 
 [Documentation::RequirePodSections]
 lib_sections = NAME | VERSION | DESCRIPTION | COPYRIGHT AND LICENSE

@@ -109,7 +109,10 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     return $generator;
 }
 
-=attr server
+=attr generate_server
+
+Boolean value on whether to generate CGI server code or just interface code.
+Defaults to false.
 
 =cut
 

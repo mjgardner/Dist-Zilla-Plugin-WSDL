@@ -124,7 +124,7 @@ has generate_server => (
 
 =method gather_files
 
-Instructs C<wsdl2perl.pl> to generate Perl classes for the provided WSDL
+Instructs L<SOAP::WSDL> to generate Perl classes for the provided WSDL
 and gathers them into the C<lib> directory of your distribution.
 
 =cut

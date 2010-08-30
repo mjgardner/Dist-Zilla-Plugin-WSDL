@@ -8,6 +8,7 @@ use LWP::UserAgent;
 use Moose;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::URI 'Uri';
+use Regexp::DefaultFlags;
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
@@ -102,7 +103,7 @@ has _typemap => (
 sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
 
-    return { map { +split /\s*=>\s*/, $ARG } $self->_typemap_array() };
+    return { map { +split / \s* => \s* /, $ARG } $self->_typemap_array() };
 }
 
 has _generator => (

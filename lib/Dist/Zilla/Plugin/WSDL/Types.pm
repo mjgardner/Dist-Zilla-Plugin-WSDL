@@ -19,13 +19,7 @@ C<Like::This::>.
 
 =cut
 
-subtype ClassPrefix, as Str, where {
-    $ARG =~ m{\A
-        (?: \w+ )                   # top of name hierarchy
-        (?: (?: :: ) (?: \w+ ) )*   # possibly more levels down
-        (?: :: )?                   # possibly followed by ::
-    };
-};
+subtype ClassPrefix, as Str, where {/\A \w+ (?: :: \w+ )* (?: :: )? \z/};
 
 1;
 

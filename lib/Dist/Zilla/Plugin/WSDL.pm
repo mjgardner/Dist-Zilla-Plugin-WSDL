@@ -6,6 +6,7 @@ use Modern::Perl;
 use English '-no_match_vars';
 use LWP::UserAgent;
 use Moose;
+use MooseX::Has::Sugar;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::URI 'Uri';
 use Path::Class;
@@ -23,18 +24,12 @@ Perl classes.
 
 =cut
 
-has uri => (
-    is       => 'ro',
-    isa      => Uri,
-    required => 1,
-    coerce   => 1,
-);
+has uri => ( ro, required, coerce, isa => Uri );
 
 has _definitions => (
-    is         => 'ro',
-    isa        => 'SOAP::WSDL::Base',
-    lazy_build => 1,
-    init_arg   => undef,
+    ro, lazy_build,
+    isa      => 'SOAP::WSDL::Base',
+    init_arg => undef,
 );
 
 sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
@@ -47,7 +42,7 @@ sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
 }
 
 has _OUTPUT_PATH => (
-    is       => 'ro',
+    ro,
     isa      => Str,
     default  => q{.},
     init_arg => undef,
@@ -60,7 +55,7 @@ String used to prefix generated classes.  Default is "My".
 =cut
 
 has prefix => (
-    is        => 'ro',
+    ro,
     isa       => ClassPrefix,
     predicate => 'has_prefix',
     default   => 'My',
@@ -84,21 +79,19 @@ Example:
 sub mvp_multivalue_args { return 'typemap' }
 
 has _typemap_lines => (
+    ro, lazy,
     traits   => ['Array'],
-    is       => 'ro',
     isa      => ArrayRef [Str],
     init_arg => 'typemap',
     handles  => { _typemap_array => 'elements' },
-    lazy     => 1,
     default  => sub { [] },
 );
 
 has _typemap => (
-    is         => 'ro',
-    isa        => HashRef [Str],
-    predicate  => 'has_typemap',
-    init_arg   => undef,
-    lazy_build => 1,
+    ro, lazy_build,
+    isa => HashRef [Str],
+    predicate => 'has_typemap',
+    init_arg  => undef,
 );
 
 sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
@@ -107,11 +100,8 @@ sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
     return { map { +split / \s* => \s* /, $ARG } $self->_typemap_array() };
 }
 
-has _generator => (
-    is         => 'ro',
-    isa        => 'SOAP::WSDL::Generator::Template::XSD',
-    lazy_build => 1,
-);
+has _generator =>
+    ( ro, lazy_build, isa => 'SOAP::WSDL::Generator::Template::XSD' );
 
 sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
@@ -149,7 +139,7 @@ Defaults to false.
 =cut
 
 has generate_server => (
-    is      => 'ro',
+    ro,
     isa     => Bool,
     default => 0,
 );

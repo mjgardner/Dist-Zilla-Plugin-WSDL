@@ -6,6 +6,7 @@ use Modern::Perl;
 use English '-no_match_vars';
 use LWP::UserAgent;
 use Moose;
+use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::URI 'Uri';
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
@@ -45,7 +46,7 @@ sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
 
 has _OUTPUT_PATH => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     default  => q{.},
     init_arg => undef,
 );
@@ -83,7 +84,7 @@ sub mvp_multivalue_args { return 'typemap' }
 has _typemap_lines => (
     traits   => ['Array'],
     is       => 'ro',
-    isa      => 'ArrayRef[Str]',
+    isa      => ArrayRef[Str],
     init_arg => 'typemap',
     handles  => { _typemap_array => 'elements' },
     lazy     => 1,
@@ -92,7 +93,7 @@ has _typemap_lines => (
 
 has _typemap => (
     is         => 'ro',
-    isa        => 'HashRef[Str]',
+    isa        => HashRef[Str],
     predicate  => 'has_typemap',
     init_arg   => undef,
     lazy_build => 1,
@@ -147,7 +148,7 @@ Defaults to false.
 
 has generate_server => (
     is      => 'ro',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 0,
 );
 

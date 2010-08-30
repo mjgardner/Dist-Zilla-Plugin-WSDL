@@ -8,6 +8,7 @@ use LWP::UserAgent;
 use Moose;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::URI 'Uri';
+use Path::Class;
 use Regexp::DefaultFlags;
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
@@ -85,7 +86,7 @@ sub mvp_multivalue_args { return 'typemap' }
 has _typemap_lines => (
     traits   => ['Array'],
     is       => 'ro',
-    isa      => ArrayRef[Str],
+    isa      => ArrayRef [Str],
     init_arg => 'typemap',
     handles  => { _typemap_array => 'elements' },
     lazy     => 1,
@@ -94,7 +95,7 @@ has _typemap_lines => (
 
 has _typemap => (
     is         => 'ro',
-    isa        => HashRef[Str],
+    isa        => HashRef [Str],
     predicate  => 'has_typemap',
     init_arg   => undef,
     lazy_build => 1,
@@ -173,7 +174,7 @@ sub gather_files {
     );
 
     for ( grep { $ARG->is_new() } @generated_files ) {
-        $ARG->file->name( 'lib/' . $ARG->file->name() );
+        $ARG->file->name( file( 'lib', $ARG->file->name() )->stringify() );
         $self->add_file( $ARG->file() );
     }
     return;

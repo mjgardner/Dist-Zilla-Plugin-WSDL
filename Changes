@@ -1,7 +1,7 @@
 {{$NEXT}}
 
 0.102420  2010-08-30 14:59:03 America/New_York
-
+    Minor documentation and maintainability changes.
 0.102390  2010-08-27 18:15:04 America/New_York
     Use SOAP::WSDL directly instead of wsdl2perl.pl script.
     Better support for mapping undefined SOAP types to classes.

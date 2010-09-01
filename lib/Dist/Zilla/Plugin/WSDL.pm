@@ -2,7 +2,6 @@ package Dist::Zilla::Plugin::WSDL;
 
 # ABSTRACT: WSDL to Perl classes when building your dist
 
-use Modern::Perl;
 use English '-no_match_vars';
 use LWP::UserAgent;
 use Moose;

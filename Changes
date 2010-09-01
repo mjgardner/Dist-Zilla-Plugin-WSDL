@@ -1,5 +1,5 @@
 {{$NEXT}}
-
+    Downgrade Perl dependency to version 5.8.8.
 0.102420  2010-08-30 14:59:03 America/New_York
     Minor documentation and maintainability changes.
 0.102390  2010-08-27 18:15:04 America/New_York

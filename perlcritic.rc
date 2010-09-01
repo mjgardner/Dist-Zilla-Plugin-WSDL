@@ -1,6 +1,6 @@
 severity = brutal
 verbose = 8
-exclude = RequireEmacsFileVariables RequirePodAtEnd RequireRcsKeywords RegularExpressions::RequireDotMatchAnything RegularExpressions::RequireExtendedFormatting RegularExpressions::RequireLineBoundaryMatching
+exclude = RequireEmacsFileVariables RequirePodAtEnd RequireRcsKeywords RegularExpressions::RequireDotMatchAnything RegularExpressions::RequireExtendedFormatting RegularExpressions::RequireLineBoundaryMatching RequirePODUseEncodingUTF8
 
 [Documentation::PodSpelling]
 stop_words = WSDL plugin typemap uri CGI

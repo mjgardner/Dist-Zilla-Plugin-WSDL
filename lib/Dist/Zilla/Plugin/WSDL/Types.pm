@@ -2,7 +2,6 @@ package Dist::Zilla::Plugin::WSDL::Types;
 
 # ABSTRACT: Subtypes for Dist::Zilla::Plugin::WSDL
 
-use Modern::Perl;
 use English '-no_match_vars';
 use Regexp::DefaultFlags;
 use Moose;

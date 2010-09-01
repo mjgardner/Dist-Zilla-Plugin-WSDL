@@ -2,7 +2,7 @@ NAME
     Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 VERSION
-    version 0.102420
+    version 0.102440
 
 DESCRIPTION
     This Dist::Zilla plugin will create classes in your distribution for

@@ -33,7 +33,6 @@ ATTRIBUTES
     code. Defaults to false.
 
 METHODS
-  gather_files
   setup_installer
     Instructs SOAP::WSDL to generate Perl classes for the provided WSDL and
     gathers them into the "lib" directory of your distribution.

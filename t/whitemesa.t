@@ -3,7 +3,6 @@
 use Cwd;
 use Dist::Zilla::Tester 4.101550;
 use File::Temp;
-use Modern::Perl;
 use Test::Most tests => 1;
 use Test::Moose;
 

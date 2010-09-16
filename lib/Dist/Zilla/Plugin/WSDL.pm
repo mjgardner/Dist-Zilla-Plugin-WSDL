@@ -14,7 +14,7 @@ use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
 with 'Dist::Zilla::Role::Tempdir';
-with 'Dist::Zilla::Role::FileGatherer';
+with 'Dist::Zilla::Role::InstallTool';
 
 =attr uri
 
@@ -143,14 +143,14 @@ has generate_server => (
     default => 0,
 );
 
-=method gather_files
+=method setup_installer
 
 Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
 WSDL and gathers them into the C<lib> directory of your distribution.
 
 =cut
 
-sub gather_files {
+sub setup_installer {
     my $self = shift;
 
     my (@generated_files) = $self->capture_tempdir(

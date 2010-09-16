@@ -8,6 +8,7 @@ use Moose;
 use MooseX::Types::Moose 'Str';
 use MooseX::Types -declare => ['ClassPrefix'];
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
+## no critic (Tics::ProhibitLongLines)
 
 =head1 TYPES
 

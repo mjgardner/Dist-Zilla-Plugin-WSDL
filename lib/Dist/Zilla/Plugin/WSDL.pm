@@ -199,7 +199,7 @@ sub after_build {
     for ( $self->_all_generated_files ) {
         ## no critic (ProhibitAccessOfPrivateData)
         my $source      = $data_ref->{build_root}->file($ARG);
-        my $destination = $self->zilla->root->file( $source->basename() );
+        my $destination = $self->zilla->root->file($ARG);
         $self->log("Copying $source to $destination");
         copy $source, $destination;
     }

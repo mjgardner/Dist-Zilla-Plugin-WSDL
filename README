@@ -2,7 +2,7 @@ NAME
     Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 VERSION
-    version 0.102590
+    version 0.102600
 
 DESCRIPTION
     This Dist::Zilla plugin will create classes in your distribution for
@@ -33,9 +33,12 @@ ATTRIBUTES
     code. Defaults to false.
 
 METHODS
-  setup_installer
+  gather_files
     Instructs SOAP::WSDL to generate Perl classes for the provided WSDL and
     gathers them into the "lib" directory of your distribution.
+
+  after_build
+    Copies the generated Perl class files into your distribution.
 
 INSTALLATION
     See perlmodinstall for information and options on installing Perl

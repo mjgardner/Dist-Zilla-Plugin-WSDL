@@ -3,6 +3,7 @@ package Dist::Zilla::Plugin::WSDL;
 # ABSTRACT: WSDL to Perl classes when building your dist
 
 use English '-no_match_vars';
+use File::Copy 'copy';
 use LWP::UserAgent;
 use Moose;
 use MooseX::Has::Sugar;
@@ -14,7 +15,8 @@ use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
 with 'Dist::Zilla::Role::Tempdir';
-with 'Dist::Zilla::Role::InstallTool';
+with 'Dist::Zilla::Role::FileGatherer';
+with 'Dist::Zilla::Role::AfterBuild';
 
 =attr uri
 
@@ -143,14 +145,30 @@ has generate_server => (
     default => 0,
 );
 
-=method setup_installer
+has _generated_files => (
+    rw,
+    isa => ArrayRef [Str],
+    traits   => ['Array'],
+    init_arg => undef,
+    default  => sub { [] },
+    handles  => {
+        _all_generated_files => 'elements',
+        _add_generated_files => 'push',
+    },
+);
+
+after add_file => sub {
+    shift->_add_generated_files( map { $ARG->name() } @ARG );
+};
+
+=method gather_files
 
 Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
 WSDL and gathers them into the C<lib> directory of your distribution.
 
 =cut
 
-sub setup_installer {
+sub gather_files {
     my $self = shift;
 
     my (@generated_files) = $self->capture_tempdir(
@@ -166,6 +184,24 @@ sub setup_installer {
         $ARG->file->name( file( 'lib', $ARG->file->name() )->stringify() );
         $self->add_file( $ARG->file() );
     }
+    return;
+}
+
+=method after_build
+
+Copies the generated Perl class files into your distribution.
+
+=cut
+
+sub after_build {
+    my ( $self, $data_ref ) = @ARG;
+
+    for ( $self->_all_generated_files ) {
+        ## no critic (ProhibitAccessOfPrivateData)
+        copy $data_ref->{build_root}->file($ARG),
+            $self->zilla->root->file($ARG);
+    }
+
     return;
 }
 

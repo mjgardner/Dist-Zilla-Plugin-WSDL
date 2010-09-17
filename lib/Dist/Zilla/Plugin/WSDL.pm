@@ -169,7 +169,7 @@ sub before_build {
     {
         $file->name( file( 'lib', $file->name() )->stringify() );
         $self->log( 'Saving ' . $file->name() );
-        my $file_path = $self->zilla->root->file($ARG);
+        my $file_path = $self->zilla->root->file( $file->name() );
         $file_path->dir->mkpath();
         my $fh = $file_path->openw();
         print $fh $file->content();

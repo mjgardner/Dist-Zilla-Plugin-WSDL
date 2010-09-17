@@ -2,6 +2,7 @@ package Dist::Zilla::Plugin::WSDL;
 
 # ABSTRACT: WSDL to Perl classes when building your dist
 
+use autodie;
 use English '-no_match_vars';
 use File::Copy 'copy';
 use LWP::UserAgent;
@@ -15,8 +16,7 @@ use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
 with 'Dist::Zilla::Role::Tempdir';
-with 'Dist::Zilla::Role::FileGatherer';
-with 'Dist::Zilla::Role::AfterBuild';
+with 'Dist::Zilla::Role::BeforeBuild';
 
 =attr uri
 
@@ -145,30 +145,14 @@ has generate_server => (
     default => 0,
 );
 
-has _generated_files => (
-    rw,
-    isa => ArrayRef [Str],
-    traits   => ['Array'],
-    init_arg => undef,
-    default  => sub { [] },
-    handles  => {
-        _all_generated_files => 'elements',
-        _add_generated_files => 'push',
-    },
-);
-
-after add_file => sub {
-    shift->_add_generated_files( map { $ARG->name() } @ARG );
-};
-
-=method gather_files
+=method before_build
 
 Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
 WSDL and gathers them into the C<lib> directory of your distribution.
 
 =cut
 
-sub gather_files {
+sub before_build {
     my $self = shift;
 
     my (@generated_files) = $self->capture_tempdir(
@@ -180,30 +164,17 @@ sub gather_files {
         }
     );
 
-    for ( grep { $ARG->is_new() } @generated_files ) {
-        $ARG->file->name( file( 'lib', $ARG->file->name() )->stringify() );
-        $self->add_file( $ARG->file() );
+    for my $file ( map { $ARG->file() }
+        grep { $ARG->is_new() } @generated_files )
+    {
+        $file->name( file( 'lib', $file->name() )->stringify() );
+        $self->log( 'Saving ' . $file->name() );
+        my $file_path = $self->zilla->root->file($ARG);
+        $file_path->dir->mkpath();
+        my $fh = $file_path->openw();
+        print $fh $file->content();
+        close $fh;
     }
-    return;
-}
-
-=method after_build
-
-Copies the generated Perl class files into your distribution.
-
-=cut
-
-sub after_build {
-    my ( $self, $data_ref ) = @ARG;
-
-    for ( $self->_all_generated_files ) {
-        ## no critic (ProhibitAccessOfPrivateData)
-        my $source      = $data_ref->{build_root}->file($ARG);
-        my $destination = $self->zilla->root->file($ARG);
-        $self->log("Copying $source to $destination");
-        copy $source, $destination;
-    }
-
     return;
 }
 

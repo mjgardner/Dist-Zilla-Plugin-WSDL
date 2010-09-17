@@ -33,12 +33,9 @@ ATTRIBUTES
     code. Defaults to false.
 
 METHODS
-  gather_files
+  before_build
     Instructs SOAP::WSDL to generate Perl classes for the provided WSDL and
     gathers them into the "lib" directory of your distribution.
-
-  after_build
-    Copies the generated Perl class files into your distribution.
 
 INSTALLATION
     See perlmodinstall for information and options on installing Perl

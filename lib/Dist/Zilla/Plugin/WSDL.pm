@@ -198,8 +198,10 @@ sub after_build {
 
     for ( $self->_all_generated_files ) {
         ## no critic (ProhibitAccessOfPrivateData)
-        copy $data_ref->{build_root}->file($ARG),
-            $self->zilla->root->file($ARG);
+        my $source      = $data_ref->{build_root}->file($ARG);
+        my $destination = $self->zilla->root->file( $source->basename() );
+        $self->log("Copying $source to $destination");
+        copy $source, $destination;
     }
 
     return;

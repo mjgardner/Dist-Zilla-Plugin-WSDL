@@ -113,7 +113,8 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         $generator->set_typemap( $self->_typemap() );
     }
 
-    my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
+    my %prefix_method
+        = map { ( $ARG => "set_${ARG}_prefix" ) }
         qw(attribute type typemap element interface server);
     while ( my ( $prefix, $method ) = each %prefix_method ) {
         next if not $generator->can($method);
@@ -164,15 +165,17 @@ sub before_build {
         }
     );
 
-    for my $file ( map { $ARG->file() }
-        grep { $ARG->is_new() } @generated_files )
+    for my $file (
+        map  { $ARG->file() }
+        grep { $ARG->is_new() } @generated_files
+        )
     {
         $file->name( file( 'lib', $file->name() )->stringify() );
         $self->log( 'Saving ' . $file->name() );
         my $file_path = $self->zilla->root->file( $file->name() );
         $file_path->dir->mkpath();
         my $fh = $file_path->openw();
-        print $fh $file->content();
+        print {$fh} $file->content();
         close $fh;
     }
     return;

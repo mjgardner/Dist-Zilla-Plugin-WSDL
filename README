@@ -2,7 +2,7 @@ NAME
     Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 VERSION
-    version 0.102680
+    version 0.110400
 
 DESCRIPTION
     This Dist::Zilla plugin will create classes in your distribution for
@@ -45,7 +45,7 @@ BUGS AND LIMITATIONS
     No bugs have been reported.
 
     Please report any bugs or feature requests through the web interface at
-    <http://rt.cpan.org>.
+    <http://github.com/mjg/Dist-Zilla-Plugin-WSDL/issues>.
 
 AVAILABILITY
     The project homepage is
@@ -57,10 +57,10 @@ AVAILABILITY
     <http://search.cpan.org/dist/Dist-Zilla-Plugin-WSDL/>.
 
     The development version lives at
-    <http://github.com/mjg/Dist-Zilla-Plugin-WSDL.git> and may be cloned
-    from <git://github.com/mjg/Dist-Zilla-Plugin-WSDL.git>. Instead of
-    sending patches, please fork this project using the standard git and
-    github infrastructure.
+    <http://github.com/mjg/Dist-Zilla-Plugin-WSDL> and may be cloned from
+    <git://github.com/mjg/Dist-Zilla-Plugin-WSDL.git>. Instead of sending
+    patches, please fork this project using the standard git and github
+    infrastructure.
 
 AUTHOR
     Mark Gardner <mjgardner@cpan.org>

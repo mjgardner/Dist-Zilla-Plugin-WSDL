@@ -12,6 +12,8 @@ use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::URI 'Uri';
 use Path::Class;
 use Regexp::DefaultFlags;
+## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
+## no critic (RequireLineBoundaryMatching)
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
@@ -113,8 +115,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         $generator->set_typemap( $self->_typemap() );
     }
 
-    my %prefix_method
-        = map { ( $ARG => "set_${ARG}_prefix" ) }
+    my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
         qw(attribute type typemap element interface server);
     while ( my ( $prefix, $method ) = each %prefix_method ) {
         next if not $generator->can($method);

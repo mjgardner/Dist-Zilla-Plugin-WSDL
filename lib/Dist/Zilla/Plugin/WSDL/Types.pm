@@ -4,6 +4,8 @@ package Dist::Zilla::Plugin::WSDL::Types;
 
 use English '-no_match_vars';
 use Regexp::DefaultFlags;
+## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
+## no critic (RequireLineBoundaryMatching)
 use Moose;
 use MooseX::Types::Moose 'Str';
 use MooseX::Types -declare => ['ClassPrefix'];

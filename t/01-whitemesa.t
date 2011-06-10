@@ -3,7 +3,7 @@
 use Cwd;
 use Dist::Zilla::Tester 4.101550;
 use File::Temp;
-use Test::Most tests => 1;
+use Test::Most 'bail', tests => 1;
 use Test::Moose;
 
 use Dist::Zilla::Plugin::WSDL;

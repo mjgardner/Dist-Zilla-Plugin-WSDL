@@ -1,5 +1,5 @@
 {{$NEXT}}
-
+    Actually insert the typemaps specified in dist.ini.
 0.200     2011-05-23 13:49:26 America/New_York
     Minor code cleanup.
     Updated POD, copyright, and dependencies.

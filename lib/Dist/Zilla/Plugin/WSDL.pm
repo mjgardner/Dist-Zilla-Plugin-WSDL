@@ -163,7 +163,7 @@ sub before_build {
             my $method = 'generate_'
                 . ( $self->generate_server ? 'server' : 'interface' );
             $self->_generator->$method;
-        }
+        },
     );
 
     for my $file (

@@ -9,7 +9,7 @@ Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 =head1 VERSION
 
-version 0.202
+version 0.203
 
 =head1 DESCRIPTION
 
@@ -53,6 +53,16 @@ Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
 WSDL and gathers them into the C<lib> directory of your distribution.
 
 =for Pod::Coverage mvp_multivalue_args
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Dist::Zilla|Dist::Zilla>
+
+=item L<SOAP::WSDL|SOAP::WSDL>
+
+=back
 
 =head1 SUPPORT
 

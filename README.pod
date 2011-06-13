@@ -79,7 +79,7 @@ __END__
 In your F<dist.ini>:
 
     [WSDL]
-    uri = http://sample.com/path/to/service.wsdl
+    uri = http://example.com/path/to/service.wsdl
     prefix = My::Dist::Remote::
 
 =head1 SEE ALSO

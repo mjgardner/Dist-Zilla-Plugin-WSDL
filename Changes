@@ -1,5 +1,7 @@
 {{$NEXT}}
     Add synopses to POD, remove unused has_prefix predicate method
+    Make parsing a URI to WSDL a type coercion.
+    Add exception class to throw if there's a problem.
 0.203     2011-06-13 14:55:06 America/New_York
     Log and throw exception if a generated file can't be opened for writing.
     Fix class name generation to be consistent with wsdl2perl.pl so that

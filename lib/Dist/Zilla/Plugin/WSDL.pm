@@ -14,9 +14,11 @@ use Path::Class;
 use Regexp::DefaultFlags;
 ## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
 ## no critic (RequireLineBoundaryMatching)
-use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
-use Dist::Zilla::Plugin::WSDL::Types 'ClassPrefix';
+use Try::Tiny;
+use Dist::Zilla::Plugin::WSDL::Error;
+use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix Definitions);
+use namespace::autoclean;
 with 'Dist::Zilla::Role::Tempdir';
 with 'Dist::Zilla::Role::BeforeBuild';
 
@@ -29,19 +31,19 @@ Perl classes.
 
 has uri => ( ro, required, coerce, isa => Uri );
 
-has _definitions => ( ro, lazy_build, isa => 'SOAP::WSDL::Base' );
+has _definitions => ( ro, lazy_build, isa => Definitions );
 
 sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
-
-    my $lwp = LWP::UserAgent->new();
-    $lwp->env_proxy();
-
-    my $parser = SOAP::WSDL::Expat::WSDLParser->new( { user_agent => $lwp } );
-    my $wsdl = $parser->parse_uri( $self->uri )
-        or $self->zilla->log_fatal('could not parse WSDL');
-
-    return $wsdl;
+    my $definitions;
+    try { $definitions = Definitions->coerce( $self->uri ) }
+    catch {
+        Dist::Zilla::Plugin::WSDL::Error->throw(
+            message => $ARG,
+            plugin  => $self,
+        );
+    };
+    return $definitions;
 }
 
 has _OUTPUT_PATH => ( ro, isa => Str, default => q{.} );
@@ -169,7 +171,7 @@ sub before_build {
 
     for my $file (
         map  { $ARG->file }
-        grep { $ARG->is_new() } @generated_files
+        grep { $ARG->is_new() } @generated_files,
         )
     {
         $file->name( file( 'lib', $file->name )->stringify() );
@@ -177,14 +179,17 @@ sub before_build {
         my $file_path = $self->zilla->root->file( $file->name );
         $file_path->dir->mkpath();
         my $fh = $file_path->openw()
-            or $self->log_fatal(
-            "could not open $file_path for writing: $OS_ERROR");
+            or Dist::Zilla::Plugin::WSDL::Error->throw(
+            message => "could not open $file_path for writing: $OS_ERROR",
+            plugin  => $self,
+            );
         print {$fh} $file->content;
         close $fh;
     }
     return;
 }
 
+__PACKAGE__->meta->make_immutable();
 1;
 
 =head1 SYNOPSIS
@@ -196,7 +201,7 @@ __END__
 In your F<dist.ini>:
 
     [WSDL]
-    uri = http://sample.com/path/to/service.wsdl
+    uri = http://example.com/path/to/service.wsdl
     prefix = My::Dist::Remote::
 
 =head1 DESCRIPTION

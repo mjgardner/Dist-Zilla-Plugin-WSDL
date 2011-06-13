@@ -6,10 +6,15 @@ use English '-no_match_vars';
 use Regexp::DefaultFlags;
 ## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
 ## no critic (RequireLineBoundaryMatching)
+use LWP::UserAgent;
 use Moose;
 use MooseX::Types::Moose 'Str';
-use MooseX::Types -declare => ['ClassPrefix'];
+use MooseX::Types::URI 'Uri';
+use MooseX::Types -declare => [qw(ClassPrefix Definitions)];
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
+use SOAP::WSDL::Expat::WSDLParser;
+use Dist::Zilla::Plugin::WSDL::Error;
+use namespace::autoclean;
 
 =head1 TYPES
 
@@ -27,6 +32,18 @@ Class prefixes should only have alphanumeric or _ characters,
 separated and optionally ending with "::".
 END_MESSAGE
 
+class_type Definitions, { class => 'SOAP::WSDL::Definitions' };
+coerce Definitions, from Uri, via {
+    my $lwp = LWP::UserAgent->new();
+    $lwp->env_proxy();
+    my $parser = SOAP::WSDL::Expat::WSDLParser->new( { user_agent => $lwp } );
+    my $wsdl = $parser->parse_uri($ARG)
+        or Dist::Zilla::Plugin::WSDL::Error->throw(
+        "could not parse $ARG into WSDL");
+    return $wsdl;
+};
+
+__PACKAGE__->meta->make_immutable();
 1;
 
 =head1 SYNOPSIS

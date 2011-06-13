@@ -1,6 +1,6 @@
 severity = brutal
 verbose = 8
-exclude = RequireEmacsFileVariables RequirePodAtEnd RequireRcsKeywords Tics::ProhibitLongLines Documentation::RequirePODUseEncodingUTF8 Modules::RequireExplicitPackage
+exclude = RequireEmacsFileVariables RequireRcsKeywords Tics::ProhibitLongLines Documentation::RequirePODUseEncodingUTF8 Modules::RequireExplicitPackage
 
 [Lax::RequireExplicitPackage::ExceptForPragmata]
 allowed_pragmata = perlversion strict warnings utf8

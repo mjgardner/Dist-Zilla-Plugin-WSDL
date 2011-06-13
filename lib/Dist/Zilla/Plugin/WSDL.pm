@@ -29,27 +29,22 @@ Perl classes.
 
 has uri => ( ro, required, coerce, isa => Uri );
 
-has _definitions => (
-    ro, lazy_build,
-    isa      => 'SOAP::WSDL::Base',
-    init_arg => undef,
-);
+has _definitions => ( ro, lazy_build, isa => 'SOAP::WSDL::Base' );
 
 sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
 
     my $lwp = LWP::UserAgent->new();
     $lwp->env_proxy();
+
     my $parser = SOAP::WSDL::Expat::WSDLParser->new( { user_agent => $lwp } );
-    return $parser->parse_uri( $self->uri() );
+    my $wsdl = $parser->parse_uri( $self->uri )
+        or $self->zilla->log_fatal('could not parse WSDL');
+
+    return $wsdl;
 }
 
-has _OUTPUT_PATH => (
-    ro,
-    isa      => Str,
-    default  => q{.},
-    init_arg => undef,
-);
+has _OUTPUT_PATH => ( ro, isa => Str, default => q{.} );
 
 =attr prefix
 
@@ -57,8 +52,7 @@ String used to prefix generated classes.  Default is "My".
 
 =cut
 
-has prefix => (
-    ro,
+has prefix => ( ro,
     isa       => ClassPrefix,
     predicate => 'has_prefix',
     default   => 'My',
@@ -91,15 +85,14 @@ has _typemap_lines => ( ro,
 
 has _typemap => ( ro, lazy_build,
     isa => HashRef [Str],
-    traits   => ['Hash'],
-    init_arg => undef,
-    handles  => { _has__typemap => 'count' },
+    traits  => ['Hash'],
+    handles => { _has__typemap => 'count' },
 );
 
 sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
 
-    return { map { +split / \s* => \s* /, $ARG } $self->_typemap_array() };
+    return { map { +split / \s* => \s* /, $ARG } $self->_typemap_array };
 }
 
 has _generator =>
@@ -111,7 +104,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $generator
         = SOAP::WSDL::Factory::Generator->get_generator( { type => 'XSD' } );
     if ( $self->_has__typemap and $generator->can('set_typemap') ) {
-        $generator->set_typemap( $self->_typemap() );
+        $generator->set_typemap( $self->_typemap );
     }
 
     my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
@@ -140,11 +133,7 @@ Defaults to false.
 
 =cut
 
-has generate_server => (
-    ro,
-    isa     => Bool,
-    default => 0,
-);
+has generate_server => ( ro, isa => Bool, default => 0 );
 
 =method before_build
 
@@ -182,8 +171,6 @@ sub before_build {
 }
 
 1;
-
-__END__
 
 =head1 DESCRIPTION
 

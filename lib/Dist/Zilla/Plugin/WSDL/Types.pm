@@ -24,8 +24,6 @@ subtype ClassPrefix, as Str, where {/\A \w+ (?: :: \w+ )* (?: :: )? \z/};
 
 1;
 
-__END__
-
 =head1 DESCRIPTION
 
 This is a L<Moose|Moose> subtype library for

@@ -1,5 +1,5 @@
 {{$NEXT}}
-
+    Log and throw a fatat exception if the WSDL parser returns nothing
 0.201     2011-06-10 13:44:50 America/New_York
     Actually insert the typemaps specified in dist.ini.
 0.200     2011-05-23 13:49:26 America/New_York

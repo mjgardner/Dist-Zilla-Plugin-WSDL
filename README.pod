@@ -9,7 +9,9 @@ Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 =head1 VERSION
 
-version 0.203
+version 0.204
+
+=head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
@@ -70,6 +72,15 @@ Instructs L<SOAP::WSDL|SOAP::WSDL> to generate Perl classes for the provided
 WSDL and gathers them into the C<lib> directory of your distribution.
 
 =for Pod::Coverage mvp_multivalue_args
+
+=for test_synopsis 1;
+__END__
+
+In your F<dist.ini>:
+
+    [WSDL]
+    uri = http://sample.com/path/to/service.wsdl
+    prefix = My::Dist::Remote::
 
 =head1 SEE ALSO
 

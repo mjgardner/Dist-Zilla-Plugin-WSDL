@@ -29,6 +29,13 @@ END_MESSAGE
 
 1;
 
+=head1 SYNOPSIS
+
+    use Moose;
+    use Dist::Zilla::Plugin::WSDL::Types ':all';
+
+    has prefix => ( is => 'ro', isa => ClassPrefix, default => 'Foo::' );
+
 =head1 DESCRIPTION
 
 This is a L<Moose|Moose> subtype library for

@@ -16,7 +16,7 @@ use Regexp::DefaultFlags;
 ## no critic (RequireLineBoundaryMatching)
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
-use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix);
+use Dist::Zilla::Plugin::WSDL::Types 'ClassPrefix';
 with 'Dist::Zilla::Role::Tempdir';
 with 'Dist::Zilla::Role::BeforeBuild';
 
@@ -69,11 +69,7 @@ in classes under:
 
 =cut
 
-has prefix => ( ro,
-    isa       => ClassPrefix,
-    predicate => 'has_prefix',
-    default   => 'My',
-);
+has prefix => ( ro, isa => ClassPrefix, default => 'My' );
 
 =attr typemap
 
@@ -190,6 +186,18 @@ sub before_build {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+=for test_synopsis
+1;
+__END__
+
+In your F<dist.ini>:
+
+    [WSDL]
+    uri = http://sample.com/path/to/service.wsdl
+    prefix = My::Dist::Remote::
 
 =head1 DESCRIPTION
 

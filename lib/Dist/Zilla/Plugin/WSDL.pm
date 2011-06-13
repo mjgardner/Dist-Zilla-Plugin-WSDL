@@ -48,7 +48,24 @@ has _OUTPUT_PATH => ( ro, isa => Str, default => q{.} );
 
 =attr prefix
 
-String used to prefix generated classes.  Default is "My".
+String used to prefix generated class names.  Default is "My", which will result
+in classes under:
+
+=over
+
+=item C<MyAttributes::>
+
+=item C<MyElements::>
+
+=item C<MyInterfaces::>
+
+=item C<MyServer::>
+
+=item C<MyTypes::>
+
+=item C<MyTypemaps::>
+
+=back
 
 =cut
 
@@ -113,7 +130,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         next if not $generator->can($method);
         $generator->$method( $self->prefix
                 . ucfirst($prefix)
-                . ( $prefix eq 'server' ? 's' : q{} ) );
+                . ( $prefix eq 'server' ? q{} : 's' ) );
     }
 
     my %attr_method

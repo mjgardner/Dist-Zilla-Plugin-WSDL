@@ -11,7 +11,7 @@ use Test::Moose;
 use Dist::Zilla::Plugin::WSDL;
 
 my $tests;
-my $typemap_class = 'MyTypemap::WSDLInteropTestDocLitService';
+my $typemap_class = 'MyTypemaps::WSDLInteropTestDocLitService';
 my %typemap       = (
     TestTypeString => 'SOAP::WSDL::XSD::Typelib::Builtin::string',
     TestTypeToken  => 'SOAP::WSDL::XSD::Typelib::Builtin::token',
@@ -38,7 +38,7 @@ END_INI
 
 $zilla->build();
 eval $zilla->slurp_file(
-    file(qw(source lib MyTypemap WSDLInteropTestDocLitService.pm))
+    file(qw(source lib MyTypemaps WSDLInteropTestDocLitService.pm))
         ->stringify() );
 while ( my ( $key, $class ) = each %typemap ) {
     is( $typemap_class->get_class( [$key] ), $class, "typemap $key" );

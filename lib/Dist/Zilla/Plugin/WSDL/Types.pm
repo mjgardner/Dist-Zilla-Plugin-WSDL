@@ -20,7 +20,12 @@ C<Like::This::>.
 
 =cut
 
-subtype ClassPrefix, as Str, where {/\A \w+ (?: :: \w+ )* (?: :: )? \z/};
+subtype ClassPrefix, as Str, where {/\A \w+ (?: :: \w+ )* (?: :: )? \z/},
+    message {
+    <<'END_MESSAGE'};
+Class prefixes should only have alphanumeric or _ characters,
+separated and optionally ending with "::".
+END_MESSAGE
 
 1;
 

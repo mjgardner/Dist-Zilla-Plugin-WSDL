@@ -1,7 +1,7 @@
 {{$NEXT}}
-
+    Log and throw exception if a generated file can't be opened for writing.
 0.202     2011-06-13 11:30:48 America/New_York
-    Log and throw a fatat exception if the WSDL parser returns nothing
+    Log and throw exception if the WSDL parser returns nothing
 0.201     2011-06-10 13:44:50 America/New_York
     Actually insert the typemaps specified in dist.ini.
 0.200     2011-05-23 13:49:26 America/New_York

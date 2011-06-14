@@ -109,17 +109,14 @@ has _typemap_lines => ( ro,
     default  => sub { [] },
 );
 
-has _typemap => ( ro, lazy_build,
+has _typemap => ( ro, lazy,
     isa => HashRef [ModuleName],
     traits  => ['Hash'],
     handles => { _has__typemap => 'count' },
+    default => sub {
+        return { map { split / \s* => \s* /, $ARG } $ARG[0]->_typemap_array };
+    },
 );
-
-sub _build__typemap {    ## no critic (ProhibitUnusedPrivateSubroutines)
-    my $self = shift;
-
-    return { map { +split / \s* => \s* /, $ARG } $self->_typemap_array };
-}
 
 has _generator =>
     ( ro, lazy_build, isa => 'SOAP::WSDL::Generator::Template::XSD' );

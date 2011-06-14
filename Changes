@@ -1,5 +1,5 @@
 {{$NEXT}}
-
+    Fix synopsis POD
 0.204     2011-06-14 11:15:57 America/New_York
     Add synopses to POD, remove unused has_prefix predicate method
     Get rid of all the type and exception nonsense, let Dist::Zilla and Moose

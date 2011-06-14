@@ -200,10 +200,6 @@ __PACKAGE__->meta->make_immutable();
 
 =head1 SYNOPSIS
 
-=for test_synopsis
-1;
-__END__
-
 In your F<dist.ini>:
 
     [WSDL]

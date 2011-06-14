@@ -9,15 +9,15 @@ use LWP::UserAgent;
 use Moose;
 use MooseX::Has::Sugar;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
+use MooseX::Types::Perl 'ModuleName';
 use MooseX::Types::URI 'Uri';
 use Path::Class;
 use Regexp::DefaultFlags;
 ## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
 ## no critic (RequireLineBoundaryMatching)
+use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Try::Tiny;
-use Dist::Zilla::Plugin::WSDL::Error;
-use Dist::Zilla::Plugin::WSDL::Types qw(ClassPrefix Definitions);
 use namespace::autoclean;
 with 'Dist::Zilla::Role::Tempdir';
 with 'Dist::Zilla::Role::BeforeBuild';
@@ -31,19 +31,20 @@ Perl classes.
 
 has uri => ( ro, required, coerce, isa => Uri );
 
-has _definitions => ( ro, lazy_build, isa => Definitions );
+has _definitions => ( ro, lazy_build, isa => 'SOAP::WSDL::Definitions' );
 
 sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
-    my $definitions;
-    try { $definitions = Definitions->coerce( $self->uri ) }
-    catch {
-        Dist::Zilla::Plugin::WSDL::Error->throw(
-            message => $ARG,
-            plugin  => $self,
-        );
-    };
-    return $definitions;
+    my $uri  = $self->uri;
+
+    my $lwp = LWP::UserAgent->new();
+    $lwp->env_proxy();
+    my $parser = SOAP::WSDL::Expat::WSDLParser->new( { user_agent => $lwp } );
+
+    my $wsdl;
+    try { $wsdl = $parser->parse_uri( $self->uri ) }
+    catch { $self->log_fatal("could not parse $uri into WSDL: $ARG") };
+    return $wsdl;
 }
 
 has _OUTPUT_PATH => ( ro, isa => Str, default => q{.} );
@@ -71,7 +72,17 @@ in classes under:
 
 =cut
 
-has prefix => ( ro, isa => ClassPrefix, default => 'My' );
+has prefix => ( ro,
+    default => 'My',
+    isa     => Moose::Meta::TypeConstraint->new(
+        message =>
+            sub {'must be valid class name, optionally ending in "::"'},
+        constraint => sub {
+            $ARG =~ s/ :: \z//;
+            ModuleName->check($ARG);
+        },
+    ),
+);
 
 =attr typemap
 
@@ -99,7 +110,7 @@ has _typemap_lines => ( ro,
 );
 
 has _typemap => ( ro, lazy_build,
-    isa => HashRef [Str],
+    isa => HashRef [ModuleName],
     traits  => ['Hash'],
     handles => { _has__typemap => 'count' },
 );
@@ -179,10 +190,8 @@ sub before_build {
         my $file_path = $self->zilla->root->file( $file->name );
         $file_path->dir->mkpath();
         my $fh = $file_path->openw()
-            or Dist::Zilla::Plugin::WSDL::Error->throw(
-            message => "could not open $file_path for writing: $OS_ERROR",
-            plugin  => $self,
-            );
+            or $self->log_fatal(
+            "could not open $file_path for writing: $OS_ERROR");
         print {$fh} $file->content;
         close $fh;
     }

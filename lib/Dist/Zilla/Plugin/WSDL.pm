@@ -44,7 +44,7 @@ use English '-no_match_vars';
 use File::Copy 'copy';
 use LWP::UserAgent;
 use Moose;
-use MooseX::Has::Sugar;
+use MooseX::AttributeShortcuts;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::Perl 'ModuleName';
 use MooseX::Types::URI 'Uri';
@@ -66,9 +66,9 @@ Perl classes.
 
 =cut
 
-has uri => ( ro, required, coerce, isa => Uri );
+has uri => ( is => 'ro', required => 1, coerce => 1, isa => Uri );
 
-has _definitions => ( ro, lazy_build, isa => 'SOAP::WSDL::Definitions' );
+has _definitions => ( is => 'lazy', isa => 'SOAP::WSDL::Definitions' );
 
 sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
@@ -84,7 +84,7 @@ sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
     return $wsdl;
 }
 
-has _OUTPUT_PATH => ( ro, isa => Str, default => q{.} );
+has _OUTPUT_PATH => ( is => 'lazy', isa => Str, default => q{.} );
 
 =attr prefix
 
@@ -109,7 +109,8 @@ in classes under:
 
 =cut
 
-has prefix => ( ro,
+has prefix => (
+    is      => 'ro',
     default => 'My',
     isa     => Moose::Meta::TypeConstraint->new(
         message =>
@@ -138,16 +139,18 @@ Example:
 
 sub mvp_multivalue_args { return 'typemap' }
 
-has _typemap_lines => ( ro,
-    isa => ArrayRef [Str],
+has _typemap_lines => (
+    is       => 'ro',
+    isa      => ArrayRef [Str],
     traits   => ['Array'],
     init_arg => 'typemap',
     handles  => { _typemap_array => 'elements' },
     default  => sub { [] },
 );
 
-has _typemap => ( ro, lazy,
-    isa => HashRef [ModuleName],
+has _typemap => (
+    is      => 'lazy',
+    isa     => HashRef [ModuleName],
     traits  => ['Hash'],
     handles => { _has__typemap => 'count' },
     default => sub {
@@ -156,7 +159,7 @@ has _typemap => ( ro, lazy,
 );
 
 has _generator =>
-    ( ro, lazy_build, isa => 'SOAP::WSDL::Generator::Template::XSD' );
+    ( is => 'lazy', isa => 'SOAP::WSDL::Generator::Template::XSD' );
 
 sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     my $self = shift;
@@ -193,7 +196,7 @@ Defaults to false.
 
 =cut
 
-has generate_server => ( ro, isa => Bool, default => 0 );
+has generate_server => ( is => 'lazy', isa => Bool, default => 0 );
 
 =method before_build
 

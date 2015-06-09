@@ -10,6 +10,7 @@ use Dist::Zilla::Tester 4.101550;
 use File::Temp;
 use Path::Class;
 use Test::Most;
+use Test::RequiresInternet ( 'www.whitemesa.com' => 80 );
 use Test::Moose;
 
 use Dist::Zilla::Plugin::WSDL;

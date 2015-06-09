@@ -1,6 +1,7 @@
 Revision history for perl module Dist::Zilla::Plugin::WSDL
 
 {{$NEXT}}
+  - #1 test for Internet connectivity before trying to retrieve live WSDL
   - Ensure portability and synopsis tests are called/not called correctly
     (thanks SROMANOV)
   - Reduce cognitive load of switching between Moose and Moo by using

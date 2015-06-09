@@ -7,10 +7,13 @@ use utf8;
 use Cwd;
 use Dist::Zilla::Tester 4.101550;
 use File::Temp;
-use Test::Most 'bail', tests => 1;
+use Test::Most 'bail';
+use Test::RequiresInternet ( 'www.whitemesa.com' => 80 );
 use Test::Moose;
 
 use Dist::Zilla::Plugin::WSDL;
+
+plan tests => 1;
 
 my $dist_dir = File::Temp->newdir();
 my $zilla    = Dist::Zilla::Tester->from_config(

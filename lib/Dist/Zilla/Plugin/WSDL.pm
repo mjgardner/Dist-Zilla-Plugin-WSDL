@@ -178,7 +178,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         next if not $generator->can($method);
         $generator->$method( $self->prefix
                 . ucfirst($prefix)
-                . ( $prefix eq 'server' ? q{} : 's' ) );
+                . ( 'server' eq $prefix ? q{} : 's' ) );
     }
 
     my %attr_method

@@ -56,8 +56,10 @@ use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Try::Tiny;
 use namespace::autoclean;
-with 'Dist::Zilla::Role::Tempdir';
-with 'Dist::Zilla::Role::BeforeBuild';
+with qw(
+    Dist::Zilla::Role::Tempdir
+    Dist::Zilla::Role::BeforeBuild
+);
 
 =attr uri
 

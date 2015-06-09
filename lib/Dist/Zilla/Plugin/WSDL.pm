@@ -2,6 +2,43 @@ package Dist::Zilla::Plugin::WSDL;
 
 # ABSTRACT: WSDL to Perl classes when building your dist
 
+use 5.008_008;
+use strict;
+use warnings;
+
+# VERSION
+use utf8;
+
+=for test_synopsis
+BEGIN { die "SKIP: this is ini, not perl\n"; }
+
+=head1 SYNOPSIS
+
+In your F<dist.ini>:
+
+    [WSDL]
+    uri = http://example.com/path/to/service.wsdl
+    prefix = My::Dist::Remote::
+
+=head1 DESCRIPTION
+
+This L<Dist::Zilla|Dist::Zilla> plugin will create classes in your
+distribution for interacting with a web service based on that service's
+published WSDL file.  It uses L<SOAP::WSDL|SOAP::WSDL> and can optionally add
+both a class prefix and a typemap.
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Dist::Zilla|Dist::Zilla>
+
+=item L<SOAP::WSDL|SOAP::WSDL>
+
+=back
+
+=cut
+
 use autodie;
 use English '-no_match_vars';
 use File::Copy 'copy';
@@ -196,29 +233,5 @@ sub before_build {
 }
 
 __PACKAGE__->meta->make_immutable();
+no Moose;
 1;
-
-=head1 SYNOPSIS
-
-In your F<dist.ini>:
-
-    [WSDL]
-    uri = http://example.com/path/to/service.wsdl
-    prefix = My::Dist::Remote::
-
-=head1 DESCRIPTION
-
-This L<Dist::Zilla|Dist::Zilla> plugin will create classes in your
-distribution for interacting with a web service based on that service's
-published WSDL file.  It uses L<SOAP::WSDL|SOAP::WSDL> and can optionally add
-both a class prefix and a typemap.
-
-=head1 SEE ALSO
-
-=over
-
-=item L<Dist::Zilla|Dist::Zilla>
-
-=item L<SOAP::WSDL|SOAP::WSDL>
-
-=back

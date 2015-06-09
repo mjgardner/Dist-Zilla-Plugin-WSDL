@@ -1,5 +1,9 @@
 #!perl
 
+use 5.008_008;
+use strict;
+use warnings;
+use utf8;
 use Cwd;
 use Dist::Zilla::Tester 4.101550;
 use File::Temp;

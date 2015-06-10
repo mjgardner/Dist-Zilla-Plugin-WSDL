@@ -2,9 +2,7 @@ package Dist::Zilla::Plugin::WSDL;
 
 # ABSTRACT: WSDL to Perl classes when building your dist
 
-use 5.008_008;
-use strict;
-use warnings;
+use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 
 # VERSION
 use utf8;
@@ -44,14 +42,12 @@ use English '-no_match_vars';
 use File::Copy 'copy';
 use LWP::UserAgent;
 use Moose;
+use Moose::Meta::TypeConstraint;
 use MooseX::AttributeShortcuts;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::Perl 'ModuleName';
 use MooseX::Types::URI 'Uri';
 use Path::Class;
-use Regexp::DefaultFlags;
-## no critic (RequireDotMatchAnything,RequireExtendedFormatting)
-## no critic (RequireLineBoundaryMatching)
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Try::Tiny;
@@ -118,7 +114,8 @@ has prefix => (
         message =>
             sub {'must be valid class name, optionally ending in "::"'},
         constraint => sub {
-            $ARG =~ s/ :: \z//;
+            ## no critic (Modules::RequireExplicitInclusion)
+            $ARG =~ s/ :: \z//msx;
             ModuleName->check($ARG);
         },
     ),
@@ -156,7 +153,8 @@ has _typemap => (
     traits  => ['Hash'],
     handles => { _has__typemap => 'count' },
     default => sub {
-        return { map { split / \s* => \s* /, $ARG } $ARG[0]->_typemap_array };
+        return { map { split / \s* => \s* /msx, $ARG }
+                $ARG[0]->_typemap_array };
     },
 );
 

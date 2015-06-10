@@ -1,8 +1,6 @@
 #!perl
 
-use 5.008_008;
-use strict;
-use warnings;
+use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use utf8;
 use Cwd;
 use Dist::Zilla::Tester 4.101550;

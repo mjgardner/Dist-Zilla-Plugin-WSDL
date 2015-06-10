@@ -1,13 +1,10 @@
 #!perl
 
-use 5.008_008;
-use strict;
-use warnings;
+use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use utf8;
 use Cwd;
 use Dist::Zilla::Tester 4.101550;
 use File::Temp;
-use Regexp::DefaultFlags;
 use Test::Most 'bail', tests => 1;
 use Test::Moose;
 
@@ -30,6 +27,6 @@ END_INI
 );
 throws_ok(
     sub { $zilla->build() },
-    qr/\A [[] WSDL []] \s /,
+    qr/\A [[] WSDL []] \s /msx,
     'WSDL exception',
 );

@@ -8,7 +8,7 @@ use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use utf8;
 
 =for test_synopsis
-BEGIN { die "SKIP: this is ini, not perl\n"; }
+BEGIN { die "SKIP: this is ini, not perl\n" }
 
 =head1 SYNOPSIS
 
@@ -68,7 +68,7 @@ has uri => ( is => 'ro', required => 1, coerce => 1, isa => Uri );
 
 has _definitions => ( is => 'lazy', isa => 'SOAP::WSDL::Definitions' );
 
-sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
+sub _build__definitions {
     my $self = shift;
     my $uri  = $self->uri;
 
@@ -78,7 +78,7 @@ sub _build__definitions {    ## no critic (ProhibitUnusedPrivateSubroutines)
 
     my $wsdl;
     try { $wsdl = $parser->parse_uri( $self->uri ) }
-    catch { $self->log_fatal("could not parse $uri into WSDL: $ARG") };
+    catch { $self->log_fatal("could not parse $uri into WSDL: $_") };
     return $wsdl;
 }
 
@@ -115,8 +115,8 @@ has prefix => (
             sub {'must be valid class name, optionally ending in "::"'},
         constraint => sub {
             ## no critic (Modules::RequireExplicitInclusion)
-            $ARG =~ s/ :: \z//msx;
-            ModuleName->check($ARG);
+            s/ :: \z//msx;
+            ModuleName->check($_);
         },
     ),
 );
@@ -153,15 +153,14 @@ has _typemap => (
     traits  => ['Hash'],
     handles => { _has__typemap => 'count' },
     default => sub {
-        return { map { split / \s* => \s* /msx, $ARG }
-                $ARG[0]->_typemap_array };
+        return { map { split / \s* => \s* /msx } $_[0]->_typemap_array };
     },
 );
 
 has _generator =>
     ( is => 'lazy', isa => 'SOAP::WSDL::Generator::Template::XSD' );
 
-sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
+sub _build__generator {
     my $self = shift;
 
     my $generator
@@ -170,7 +169,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
         $generator->set_typemap( $self->_typemap );
     }
 
-    my %prefix_method = map { ( $ARG => "set_${ARG}_prefix" ) }
+    my %prefix_method = map { ( $_ => "set_${_}_prefix" ) }
         qw(attribute type typemap element interface server);
     while ( my ( $prefix, $method ) = each %prefix_method ) {
         next if not $generator->can($method);
@@ -180,7 +179,7 @@ sub _build__generator {    ## no critic (ProhibitUnusedPrivateSubroutines)
     }
 
     my %attr_method
-        = map { ( "_$ARG" => "set_$ARG" ) } qw(OUTPUT_PATH definitions);
+        = map { ( "_$_" => "set_$_" ) } qw(OUTPUT_PATH definitions);
     while ( my ( $attr, $method ) = each %attr_method ) {
         next if not $generator->can($method);
         $generator->$method( $self->$attr );
@@ -217,11 +216,7 @@ sub before_build {
         },
     );
 
-    for my $file (
-        map  { $ARG->file }
-        grep { $ARG->is_new() } @generated_files,
-        )
-    {
+    for my $file ( map { $_->file } grep { $_->is_new() } @generated_files ) {
         $file->name( file( 'lib', $file->name )->stringify() );
         $self->log( 'Saving ' . $file->name );
         my $file_path = $self->zilla->root->file( $file->name );

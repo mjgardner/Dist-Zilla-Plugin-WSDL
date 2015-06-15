@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 # VERSION
 
-version 0.206
+version 0.207
 
 # SYNOPSIS
 

@@ -35,7 +35,8 @@ copyright_holder = test holder
 
 [WSDL]
 uri = http://www.whitemesa.com/r3/InteropTestDocLitParameters.wsdl
-$typemap_conf
+prefix = $PREFIX
+$TYPEMAP_CONF
 END_INI
 );
 

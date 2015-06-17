@@ -26,6 +26,7 @@ copyright_holder = test holder
 
 [WSDL]
 uri = http://www.whitemesa.com/r3/InteropTestDocLitParameters.wsdl
+prefix = Local::Test::My
 END_INI
 );
 lives_ok( sub { $zilla->build() } );

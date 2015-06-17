@@ -23,6 +23,7 @@ copyright_holder = test holder
 
 [WSDL]
 uri = http://example.com/path/to/service.wsdl
+prefix = Local::Test::My
 END_INI
 );
 throws_ok(

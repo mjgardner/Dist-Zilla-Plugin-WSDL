@@ -2,6 +2,7 @@ Revision history for perl module Dist::Zilla::Plugin::WSDL
 
 {{$NEXT}}
   - code cleanup, removing unnecessary perlcritic directives, etc.
+  - clean up prerequisites and tests
 0.206     2015-06-10 13:01:48-06:00 America/Denver
   - #1 test for Internet connectivity before trying to retrieve live WSDL
   - Ensure portability and synopsis tests are called/not called correctly

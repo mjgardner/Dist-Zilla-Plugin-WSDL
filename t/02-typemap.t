@@ -2,6 +2,7 @@
 
 use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use utf8;
+use Const::Fast;
 use Cwd;
 use English '-no_match_vars';
 use Dist::Zilla::Tester 4.101550;
@@ -14,17 +15,19 @@ use Test::Moose;
 use Dist::Zilla::Plugin::WSDL;
 
 my $tests;
-my $typemap_class = 'MyTypemaps::WSDLInteropTestDocLitService';
-my %typemap       = (
+const my $PREFIX        => 'Local::Test::My';
+const my $DIST_DIR      => File::Temp->newdir();
+const my $TYPEMAP_CLASS => "${PREFIX}Typemaps::WSDLInteropTestDocLitService";
+const my %TYPEMAP       => (
     TestTypeString => 'SOAP::WSDL::XSD::Typelib::Builtin::string',
     TestTypeToken  => 'SOAP::WSDL::XSD::Typelib::Builtin::token',
 );
-my $typemap_conf = join q{},
-    map {"typemap = $ARG => $typemap{$ARG}\n"} keys %typemap;
+const my $TYPEMAP_CONF => join q{},
+    map {"typemap = $_ => $TYPEMAP{$_}\n"} keys %TYPEMAP;
+plan tests => scalar keys %TYPEMAP;
 
-my $dist_dir = File::Temp->newdir();
-my $zilla    = Dist::Zilla::Tester->from_config(
-    { dist_root => "$dist_dir" },
+my $zilla = Dist::Zilla::Tester->from_config(
+    { dist_root => "$DIST_DIR" },
     { add_files => { 'source/dist.ini' => <<"END_INI"} },
 name     = test
 author   = test user
@@ -41,12 +44,8 @@ END_INI
 );
 
 $zilla->build();
-eval $zilla->slurp_file(
-    file(qw(source lib MyTypemaps WSDLInteropTestDocLitService.pm))
-        ->stringify() );
-while ( my ( $key, $class ) = each %typemap ) {
-    is( $typemap_class->get_class( [$key] ), $class, "typemap $key" );
-    $tests++;
+push @INC => dir( $zilla->tempdir, qw(source lib) )->stringify;
+eval "require $TYPEMAP_CLASS";
+while ( my ( $key, $class ) = each %TYPEMAP ) {
+    is( $TYPEMAP_CLASS->get_class( [$key] ), $class, "typemap $key" );
 }
-
-done_testing($tests);

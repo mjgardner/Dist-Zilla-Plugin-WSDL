@@ -1,12 +1,4 @@
-#!perl
-
-BEGIN {
-    if ( not $ENV{RELEASE_TESTING} ) {
-        require Test::More;
-        Test::More::plan(
-            skip_all => 'these tests are for release candidate testing' );
-    }
-}
+#!/usr/bin/env perl -T
 
 use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use Test::More;

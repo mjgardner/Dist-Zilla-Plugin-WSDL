@@ -1,6 +1,6 @@
 Revision history for perl module Dist::Zilla::Plugin::WSDL
 
-{{$NEXT}}
+0.208     2020-10-18 20:44:55-05:00 America/Chicago
   - remove AnnoCPAN from documentation
   - remove dependencies on Test::Synopsis (the POD synopsis isn't in Perl
     anyway) and Test::LocalBrew (using plenv now)

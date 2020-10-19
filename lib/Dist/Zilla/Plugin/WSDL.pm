@@ -47,7 +47,7 @@ use MooseX::AttributeShortcuts;
 use MooseX::Types::Moose qw(ArrayRef Bool HashRef Str);
 use MooseX::Types::Perl 'ModuleName';
 use MooseX::Types::URI 'Uri';
-use Path::Class;
+use Path::Tiny;
 use SOAP::WSDL::Expat::WSDLParser;
 use SOAP::WSDL::Factory::Generator;
 use Try::Tiny;
@@ -217,10 +217,10 @@ sub before_build {
     );
 
     for my $file ( map { $_->file } grep { $_->is_new() } @generated_files ) {
-        $file->name( file( 'lib', $file->name )->stringify() );
+        $file->name( path( 'lib', $file->name )->stringify() );
         $self->log( 'Saving ' . $file->name );
-        my $file_path = $self->zilla->root->file( $file->name );
-        $file_path->dir->mkpath();
+        my $file_path = $self->zilla->root->path( $file->name );
+        $file_path->parent->mkpath();
         my $fh = $file_path->openw()
             or $self->log_fatal(
             "could not open $file_path for writing: $OS_ERROR");

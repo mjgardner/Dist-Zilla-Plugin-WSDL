@@ -7,9 +7,6 @@ use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 # VERSION
 use utf8;
 
-=for test_synopsis
-BEGIN { die "SKIP: this is ini, not perl\n" }
-
 =head1 SYNOPSIS
 
 In your F<dist.ini>:

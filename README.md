@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::WSDL - WSDL to Perl classes when building your dist
 
 # VERSION
 
-version 0.207
+version 0.208
 
 # SYNOPSIS
 
@@ -16,9 +16,9 @@ In your `dist.ini`:
 
 # DESCRIPTION
 
-This [Dist::Zilla](https://metacpan.org/pod/Dist::Zilla) plugin will create classes in your
+This [Dist::Zilla](https://metacpan.org/pod/Dist%3A%3AZilla) plugin will create classes in your
 distribution for interacting with a web service based on that service's
-published WSDL file.  It uses [SOAP::WSDL](https://metacpan.org/pod/SOAP::WSDL) and can optionally add
+published WSDL file.  It uses [SOAP::WSDL](https://metacpan.org/pod/SOAP%3A%3AWSDL) and can optionally add
 both a class prefix and a typemap.
 
 # ATTRIBUTES
@@ -60,13 +60,13 @@ Defaults to false.
 
 ## before\_build
 
-Instructs [SOAP::WSDL](https://metacpan.org/pod/SOAP::WSDL) to generate Perl classes for the provided
+Instructs [SOAP::WSDL](https://metacpan.org/pod/SOAP%3A%3AWSDL) to generate Perl classes for the provided
 WSDL and gathers them into the `lib` directory of your distribution.
 
 # SEE ALSO
 
-- [Dist::Zilla](https://metacpan.org/pod/Dist::Zilla)
-- [SOAP::WSDL](https://metacpan.org/pod/SOAP::WSDL)
+- [Dist::Zilla](https://metacpan.org/pod/Dist%3A%3AZilla)
+- [SOAP::WSDL](https://metacpan.org/pod/SOAP%3A%3AWSDL)
 
 # SUPPORT
 
@@ -81,24 +81,6 @@ You can find documentation for this module with the perldoc command.
 The following websites have more information about this module, and may be of help to you. As always,
 in addition to those websites please use your favorite search engine to discover more resources.
 
-- Search CPAN
-
-    The default CPAN search engine, useful to view POD in HTML format.
-
-    [http://search.cpan.org/dist/Dist-Zilla-Plugin-WSDL](http://search.cpan.org/dist/Dist-Zilla-Plugin-WSDL)
-
-- AnnoCPAN
-
-    The AnnoCPAN is a website that allows community annotations of Perl module documentation.
-
-    [http://annocpan.org/dist/Dist-Zilla-Plugin-WSDL](http://annocpan.org/dist/Dist-Zilla-Plugin-WSDL)
-
-- CPAN Ratings
-
-    The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
-
-    [http://cpanratings.perl.org/d/Dist-Zilla-Plugin-WSDL](http://cpanratings.perl.org/d/Dist-Zilla-Plugin-WSDL)
-
 - CPANTS
 
     The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
@@ -107,7 +89,7 @@ in addition to those websites please use your favorite search engine to discover
 
 - CPAN Testers
 
-    The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
+    The CPAN Testers is a network of smoke testers who run automated tests on uploaded CPAN distributions.
 
     [http://www.cpantesters.org/distro/D/Dist-Zilla-Plugin-WSDL](http://www.cpantesters.org/distro/D/Dist-Zilla-Plugin-WSDL)
 
@@ -145,7 +127,7 @@ Mark Gardner <mjgardner@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by GSI Commerce.
+This software is copyright (c) 2020 by GSI Commerce.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,7 +1,7 @@
 Revision history for perl module Dist::Zilla::Plugin::WSDL
 
 {{$NEXT}}
-
+  - remove AnnoCPAN from documentation
 0.207     2015-06-16 21:25:50-04:00 America/New_York
   - code cleanup, removing unnecessary perlcritic directives, etc.
   - clean up prerequisites and tests
